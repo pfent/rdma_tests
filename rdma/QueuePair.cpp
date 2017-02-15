@@ -24,7 +24,6 @@
 #include "ReceiveQueue.hpp"
 #include "CompletionQueuePair.hpp"
 //---------------------------------------------------------------------------
-#include <infiniband/verbs.h>
 #include <cstring>
 #include <iostream>
 #include <iomanip>

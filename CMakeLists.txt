@@ -35,5 +35,5 @@ target_link_libraries(rdmaPingPong ibverbs)
 add_executable(rdmaInlineComparison rdmaInlineComparison.cpp ${SOURCE_FILES})
 target_link_libraries(rdmaInlineComparison ibverbs)
 
-add_library(Test SHARED ${SOURCE_FILES} ${OVERRIDES_FILES})
-target_link_libraries(Test ibverbs)
+add_library(preloadRDMA SHARED ${SOURCE_FILES} ${OVERRIDES_FILES})
+target_link_libraries(preloadRDMA ibverbs)

@@ -1,13 +1,12 @@
 #include "RDMAMessageBuffer.h"
 #include <iostream>
-#include <infiniband/verbs.h>
 #include "rdma/WorkRequest.hpp"
 #include "tcpWrapper.h"
 
 using namespace std;
 using namespace rdma;
 
-static const size_t validity = 0xDEADDEADBEEFBEEF;
+static const size_t validity = 0xDEADDEADBEEFBEEF; // arbitrary constant. Just don't use 0
 
 struct RmrInfo {
     uint32_t bufferKey;
