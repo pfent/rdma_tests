@@ -64,26 +64,26 @@ to the buffer.
 ### Inline sending
 Usually when posting a WorkRequest, an asynchronous progress starts where the RDMA capable hardware reads the message
 as needed. This is especially worthwhile for large workloads, as the control flow can immediately return to the caller.
-However for small payloads, that are especially common in transactional workloads this process can induce additional latency
+However for small payloads, that are especially common in transactional workloads, this process can induce additional latency
 until the message is actually sent. When setting the `IBV_SEND_INLINE` flag in the WorkRequest, the data is 
 synchronously copied, eliminating this latency. Setting this flag is only really viable for message sizes up to around 
 192 Bytes, where we get a ~20% improvement in messages per second. Up to around 432 Bytes, there is still a ~5% 
-improvement. Messages longer than 432 Bytes do generally not profit from being inlined..
+improvement. Messages longer than 432 Bytes do generally not profit from being inlined.
 
 The inline tests can be reproduced and remeasured for new hardware with the `rdmaInlineComparison` build target.
 
 ## Results
-To conclude this project, we did some benchmarks measuring the overall performance improvements our library enables. The
+To conclude this project, we did some benchmarks measuring the performance improvements of our library. The
 first test is a mico-benchmark only measuring the raw message throughput, i.e. a upper limit in how many round trips per
 second are possible: 
 
-| 64B Messages over               | RoundTrips / second |
-| ----                            | ------------------: |
-| TCP over Ethernet               |              19,968 |
-| TCP over Infiniband             |              42,961 |
-| RDMA without Optimizations      |             194,872 |
-| RDMA + header / footer          |             335,000 |
-| RDMA + header / footer + inline |             376,393 |
+| 64B Messages over | RoundTrips / second |
+| ---- | ------------------: |
+| TCP over Ethernet | 19,968 |
+| TCP over Infiniband | 42,961 |
+| RDMA without Optimizations | 194,872 |
+| RDMA + header / footer | 335,000 |
+| RDMA + header / footer + inline | 376,393 |
 
 The second benchmark is an adapted version of the `pgbench` TPC-B test. Unfortunately we didn't manage to get `pgbench`
 to work with `LD_PRELOAD`ing our library, but instead logged the SQL output of `pgbench -n -T 5`, which we then 
