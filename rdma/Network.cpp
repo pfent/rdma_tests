@@ -89,32 +89,30 @@ Network::Network()
 Network::~Network()
 /// Destructor
 {
-//   int status;
+    auto rq = sharedReceiveQueue.release();
+    delete rq;
+    auto cqp = sharedCompletionQueuePair.release();
+    delete cqp;
 
-   sharedReceiveQueue.release();
-   sharedCompletionQueuePair.release();
-
-    // TODO: just leak for now, since deallocating always fails
-    /*
     // Deallocate the protection domain
-    status = ::ibv_dealloc_pd(protectionDomain);
+    auto status = ::ibv_dealloc_pd(protectionDomain);
     if (status != 0) {
-       string reason = "deallocating the protection domain failed with error " + to_string(errno) + ": " + strerror(errno);
-       cerr << reason << endl;
-       throw NetworkException(reason);
+        string reason =
+                "deallocating the protection domain failed with error " + to_string(errno) + ": " + strerror(errno);
+        cerr << reason << endl;
+        throw NetworkException(reason);
     }
 
     // Close context
     status = ::ibv_close_device(context);
     if (status != 0) {
-       string reason = "closing the verbs context failed with error " + to_string(errno) + ": " + strerror(errno);
-       cerr << reason << endl;
-       throw NetworkException(reason);
+        string reason = "closing the verbs context failed with error " + to_string(errno) + ": " + strerror(errno);
+        cerr << reason << endl;
+        throw NetworkException(reason);
     }
 
     // Free devices
     ::ibv_free_device_list(devices);
-     */
 }
 //---------------------------------------------------------------------------
 uint16_t Network::getLID()
