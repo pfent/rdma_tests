@@ -1,27 +1,27 @@
 # Network Sockets over RDMA
-A writeup for the Lab Course Database Implementation
+A writeup for the [practical course database implementation](http://db.in.tum.de/teaching/ws1617/imlab/)
 
 ## Abstract
 Modern in-memory databases are more and more bottlenecked in transactional workloads by network latency. One of the 
 reasons for this latency is the overhead associated with sending data through kernel interfaces. I.e. a typical way of
-sending data over the network is the `write()` system call. Though a `SYSCALL` instruction is associated with a 
+sending data over the network is the `write()` system call. This is associated with  
 context-switches from kernel- to user-mode and back, which is rather costly. <!-- Maybe cite: https://www.cs.cmu.edu/~chensm/Big_Data_reading_group/papers/flexsc-osdi10.pdf -->  
-In this project we implemented a high-performance, low-latency TCP alternative using Remote Direct Memory Access (RDMA),
+In this project we implemented a high-performance, low-latency TCP alternative using Remote Direct Memory Access (RDMA)
 without system calls. RDMA is a technique mainly supported by the InfiniBand standard, but can also be implemented over 
 converged Ethernet and other network types.
 
 ## Previous work
 In 2015 Peter Goldsborough et al. implemented [TSSX](https://github.com/goldsborough/tssx), a *transparent shared-memory
 socket exchange*, i.e. a with `LD_PRELOAD` pre-loadable shared library, that emulates Unix domain sockets over 
-shared-memory. In his work, he demonstrated that eliminating system calls can result in  ~70% more tps in the 
-TPC-B benchmark.  
+shared-memory. In his work, he demonstrated that eliminating system calls can result in  ~70% more transactions per second (tps)
+in the TPC-B benchmark.  
 In our work, we adapted TSSX's concept for RDMA, while reusing significant parts of the code needed to support the 
 socket interface.
  
 There are some similar implementations of this concept, mainly Message Passing Interfaces like OpenMPI or MPICH that 
-also support sending messages over RDMA. However, we decided to not use this libraries as basis to avoid another level 
+also support sending messages over RDMA. However, we decided to not use these libraries as basis to avoid another level 
 of indirection (wrapping sockets in MPI in RDMA). Instead we directly base our work on [libibverbs](https://git.kernel.org/cgit/libs/infiniband/libibverbs.git)
-as described in the described in the InfiniBand architecture specification and the RDMA protocol verbs specification.
+as described in the InfiniBand architecture specification and the RDMA protocol verbs specification.
 
 ## Basic messaging
 Basic messaging in our implementation is handled by the `RDMAMessageBuffer`. At first, it registers 
@@ -43,7 +43,7 @@ behaviour with RDMA using `IBV_WR_ATOMIC_FETCH_AND_ADD` work requests.
 ### Messages with header / footer
 Apart from usual, but nevertheless significant optimizations like utilizing buffer sizes of $2^n$ for buffer 
 wraparounds, the most significant performance improvement came from a more sophisticated message signaling.  
-With the previous approach, we always sent two separate work requests: One to send the actual data and another
+With the previous approach, we always send two separate work requests: One for the actual data and another
 one to update the message count. Also one of these is an atomic operation, which is generally slower than a normal
 operation. We can squash the two operations into one with the help of two assumptions:
 
@@ -74,7 +74,7 @@ The inline tests can be reproduced and remeasured for new hardware with the `rdm
 
 ## Results
 To conclude this project, we did some benchmarks measuring the performance improvements of our library. The
-first test is a mico-benchmark only measuring the raw message throughput, i.e. a upper limit in how many round trips per
+first test is a micro-benchmark only measuring the raw message throughput, i.e. a upper limit in how many round trips per
 second are possible: 
 
 | 64B Messages over | RoundTrips / second |
