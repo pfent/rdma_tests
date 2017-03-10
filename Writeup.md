@@ -2,10 +2,9 @@
 A writeup for the [practical course database implementation](http://db.in.tum.de/teaching/ws1617/imlab/)
 
 ## Abstract
-Modern in-memory databases are more and more bottlenecked in transactional workloads by network latency. One of the 
-reasons for this latency is the overhead associated with sending data through kernel interfaces. I.e. a typical way of
-sending data over the network is the `write()` system call. This is associated with  
-context-switches from kernel- to user-mode and back, which is rather costly. <!-- Maybe cite: https://www.cs.cmu.edu/~chensm/Big_Data_reading_group/papers/flexsc-osdi10.pdf -->  
+Modern in-memory databases are more and more bottlenecked in transactional workloads by network latency. One of the reasons for this latency is
+the overhead associated with sending data through kernel interfaces. I.e. a typical way of sending data over the network is the `write()` system call.
+This is associated with context-switches from kernel- to user-mode and back, which is rather costly. <!-- Maybe cite: https://www.cs.cmu.edu/~chensm/Big_Data_reading_group/papers/flexsc-osdi10.pdf -->  
 In this project we implemented a high-performance, low-latency TCP alternative using Remote Direct Memory Access (RDMA)
 without system calls. RDMA is a technique mainly supported by the InfiniBand standard, but can also be implemented over 
 converged Ethernet and other network types.
